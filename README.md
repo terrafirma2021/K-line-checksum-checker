@@ -1,5 +1,6 @@
 # K-line checksum checker
-The Checksum Validator is a Python script that allows you to verify the validity of data bytes by calculating checksums. It can handle multiple entries, and you can input them one after the other. 
+The Checksum Validator is a Python script that allows you to verify the validity of data bytes by calculating checksums. It can handle multiple entries, and you can input them one after the other, 
+or you can select a large chunk of frames and paste them in at once.
 The script calculates the checksum for each entry and provides a "Valid" or "Not Valid" result.
 Usage
 
