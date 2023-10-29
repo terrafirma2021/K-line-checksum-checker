@@ -10,7 +10,7 @@ Usage
 
     bash
 
-git clone https://github.com/YourUsername/checksum-validator.git
+git clone https://github.com/terrafirma2021/checksum-validator.git
 
 Run the Script
 
