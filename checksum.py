@@ -1,15 +1,17 @@
+#Pushed Fix for case insensitive bug
 def calculate_checksum(data_bytes):
-    # Skip the first byte if it's 01
-    if data_bytes[0] == "01":
+    # Skip the first byte if it's '01'
+    if data_bytes[0] == '01':
         data_bytes = data_bytes[1:]
 
-    # Convert hex values to integers and calculate the sum
-    data_sum = sum(int(byte, 16) for byte in data_bytes[:-1])  # Exclude the last byte (assumed checksum)
+    # Extract the provided checksum as the last byte
+    provided_checksum = data_bytes[-1]
 
     # Calculate the checksum as a two-digit hexadecimal
+    data_sum = sum(int(byte, 16) for byte in data_bytes[:-1])  # Exclude the last byte (assumed checksum)
     calculated_checksum = format(data_sum, '02X')
 
-    return calculated_checksum
+    return calculated_checksum, provided_checksum
 
 def main():
     while True:
@@ -21,26 +23,27 @@ def main():
         data_lines = data_input.strip().split('\n')
         
         for data_line in data_lines:
+            data_line = data_line.strip()  # Remove leading/trailing spaces
             data_bytes = data_line.split()
-            
-            if len(data_bytes) < 2:
-                print("At least two data bytes are required.")
+
+            if len(data_bytes) < 3:
+                print("At least three data bytes (including checksum) are required.")
                 continue
 
             # Check if any hex value is a single digit, and if so, pad it with a 0
             data_bytes = [byte if len(byte) == 2 else '0' + byte for byte in data_bytes]
 
-            provided_checksum = data_bytes[-1]
-            calculated_checksum = calculate_checksum(data_bytes)
+            calculated_checksum, provided_checksum = calculate_checksum(data_bytes)
 
-            if calculated_checksum == provided_checksum:
+            # Compare checksums in a case-insensitive manner
+            if calculated_checksum.lower() == provided_checksum.lower():
                 result = "Valid"
             else:
                 result = "Not Valid"
 
             # Append the result to checked.txt in the desired format
             with open("checked.txt", "a") as file:
-                file.write(f"{' '.join(data_bytes)} - {result}\n")
+                file.write(f"{' '.join(data_bytes)} - Provided Checksum: {provided_checksum}, Calculated Checksum: {calculated_checksum} - {result}\n")
                 print(f"Checksum is {result}.")
 
 if __name__ == "__main__":
